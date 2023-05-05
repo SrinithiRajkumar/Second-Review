@@ -9,10 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.spring.model.Students;
 import com.spring.repository.StudentsRepo;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class StudentService {
@@ -67,7 +71,49 @@ public class StudentService {
 		// TODO Auto-generated method stub
 		return studentsRepo.findByNameEndingWith(suffix);
 	}
-	
+	public List<Students>sortStudent(String field){
+ 		return studentsRepo.findAll(Sort.by(field));
+ 	}
+ 	
+ 	public List<Students> sortDesTennisData(String field){
+ 		
+ 		return studentsRepo.findAll(Sort.by(Direction.DESC,field));
+ 	}
+
+ 	public List<Students> getpaginationss(int offset, int pagesize) {
+ 		
+ 		Page<Students> paging=studentsRepo.findAll(PageRequest.of(offset, pagesize));
+ 		return paging.getContent();
+ 	}
+
+ 	public List<Students> getsortpaginations(int offset, int pagesize,String field) {
+ 		
+ 		Page<Students> paging=studentsRepo.findAll(PageRequest.of(offset, pagesize,Sort.by(field)));
+ 		return paging.getContent();
+ 	}
+ 	
+public Students register(@RequestBody Students  roll_no) {
+		
+		return studentsRepo.save(roll_no);
+	}
+public List<Students>getStudentByName(String name) {
+	List<Students> dataList=studentsRepo.getStudentByName(name);
+	return dataList;
+}
+@Transactional
+public int deleteStudentByName(String name) {
+	return studentsRepo.deleteStudentByName(name);
+}
+
+@Transactional
+public int UpdateStudentByName(String name,String roll_no) {
+	return studentsRepo.UpdateStudentByName(name,roll_no);
+}
+
+public List<Students> sortDesStudent(String field) {
+	// TODO Auto-generated method stub
+	return null;
+}
 	
 	
 	
